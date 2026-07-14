@@ -11,7 +11,7 @@ def fetch_posts():
     print(f"🔍 Запрос к: {URL}")
     
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
         'Accept-Language': 'ru-RU,ru;q=0.9'
     }
 
@@ -19,39 +19,41 @@ def fetch_posts():
         response = requests.get(URL, headers=headers, timeout=20)
         response.raise_for_status()
     except Exception as e:
-        print(f"❌ Ошибка: {e}")
-        with open('posts.json', 'w', encoding='utf-8') as f:
-            json.dump([{"error": "Не удалось подключиться"}], f, ensure_ascii=False, indent=2)
+        print(f"❌ Ошибка сети: {e}")
         return
 
     soup = BeautifulSoup(response.text, 'html.parser')
     posts_data = []
 
-    message_wraps = soup.find_all('div', class_='tgme_widget_message_wrap')
+    # Берем с запасом 15 блоков, чтобы отфильтровать сервисные сообщения и найти 5 реальных постов
+    message_wraps = soup.find_all('div', class_='tgme_widget_message_wrap')[:15]
+    print(f"📝 Найдено всего блоков в HTML: {len(message_wraps)}")
 
     for wrap in message_wraps:
+        if len(posts_data) >= 5:
+            break
+            
         msg = wrap.find('div', class_='tgme_widget_message')
         if not msg:
             continue
 
-        # 1. Дата — улучшенный поиск
+        # 1. Дата
         date_text = 'Неизвестно'
         date_tag = msg.find('time', class_='tgme_widget_message_date')
         if date_tag:
             date_text = date_tag.text.strip()
         else:
-            # Пробуем найти дату по атрибуту datetime
             date_tag = msg.find('time')
             if date_tag and 'datetime' in date_tag.attrs:
-                date_text = date_tag.attrs['datetime'][:10]  # Берем только дату YYYY-MM-DD
+                date_text = date_tag.attrs['datetime'][:10]
 
-        # 2. Ссылка на пост
+        # 2. Ссылка
         link = f'https://t.me/{CHANNEL_NAME}'
         link_tag = msg.find('a', class_='tgme_widget_message_date')
         if link_tag and 'href' in link_tag.attrs:
             link = link_tag['href']
 
-        # 3. Текст поста
+        # 3. Текст
         text = ""
         text_tag = msg.find('div', class_='tgme_widget_message_text')
         if text_tag:
@@ -59,27 +61,31 @@ def fetch_posts():
                 br.replace_with('\n')
             text = text_tag.get_text(separator='\n', strip=True)
 
-        # 4. Изображение — расширенный поиск
+        # 4. Изображение (МАКСИМАЛЬНЫЙ ПОИСК)
         image = None
         
-        # Ищем в разных местах
-        for img_class in ['tgme_widget_message_photo_img', 'tgme_widget_message_roundvideo']:
-            img_tag = msg.find('img', class_=img_class)
-            if img_tag and 'src' in img_tag.attrs:
-                image = img_tag['src']
-                break
+        # Способ А: Прямая картинка
+        img_tag = msg.find('img', class_='tgme_widget_message_photo_img')
+        if img_tag and img_tag.get('src'):
+            image = img_tag['src']
         
+        # Способ Б: Картинка фоном (для групп фото или высокого качества)
         if not image:
-            # Ищем в background-image
-            for wrap_class in ['tgme_widget_message_photo_wrap', 'tgme_widget_message_video_wrap']:
-                wrap_tag = msg.find('div', class_=wrap_class)
-                if wrap_tag and 'style' in wrap_tag.attrs:
-                    match = re.search(r"url\(['\"]?(.*?)['\"]?\)", wrap_tag['style'])
-                    if match:
-                        image = match.group(1)
-                        break
+            photo_wrap = msg.find('div', class_='tgme_widget_message_photo_wrap')
+            if photo_wrap and photo_wrap.get('style'):
+                match = re.search(r"url\(['\"]?(.*?)['\"]?\)", photo_wrap['style'])
+                if match:
+                    image = match.group(1)
+                    
+        # Способ В: Картинка превью ссылки (если пост - это ссылка на сайт)
+        if not image:
+            link_preview = msg.find('div', class_='tgme_widget_message_link_preview')
+            if link_preview:
+                preview_img = link_preview.find('img')
+                if preview_img and preview_img.get('src'):
+                    image = preview_img['src']
 
-        # Сохраняем пост с контентом
+        # Сохраняем ТОЛЬКО если есть текст ИЛИ картинка (отсеиваем пустые сервисные сообщения)
         if text or image:
             posts_data.append({
                 'date': date_text,
@@ -87,11 +93,11 @@ def fetch_posts():
                 'image': image,
                 'link': link
             })
+            print(f"✅ Добавлен пост #{len(posts_data)}: Дата={date_text}, Текст={len(text)} симв., Фото={'Да' if image else 'Нет'}")
+        else:
+            print("⚠️ Пропущен пустой/сервисный блок")
 
-        if len(posts_data) >= 5:
-            break
-
-    print(f"✅ Найдено {len(posts_data)} постов")
+    print(f"🏁 ИТОГО: Успешно собрано {len(posts_data)} постов.")
 
     with open('posts.json', 'w', encoding='utf-8') as f:
         json.dump(posts_data, f, ensure_ascii=False, indent=2)
