@@ -25,9 +25,9 @@ def fetch_posts():
     soup = BeautifulSoup(response.text, 'html.parser')
     posts_data = []
 
-    # Берем с запасом 15 блоков, чтобы отфильтровать сервисные сообщения и найти 5 реальных постов
-    message_wraps = soup.find_all('div', class_='tgme_widget_message_wrap')[:15]
-    print(f"📝 Найдено всего блоков в HTML: {len(message_wraps)}")
+    # Берем с запасом 10 блоков
+    message_wraps = soup.find_all('div', class_='tgme_widget_message_wrap')[:10]
+    print(f"📝 Найдено блоков в HTML: {len(message_wraps)}")
 
     for wrap in message_wraps:
         if len(posts_data) >= 5:
@@ -61,31 +61,38 @@ def fetch_posts():
                 br.replace_with('\n')
             text = text_tag.get_text(separator='\n', strip=True)
 
-        # 4. Изображение (МАКСИМАЛЬНЫЙ ПОИСК)
+        # 4. Изображение (МАКСИМАЛЬНО ПОДРОБНЫЙ ПОИСК)
         image = None
         
-        # Способ А: Прямая картинка
+        # Способ А: Обычное фото (тег img)
         img_tag = msg.find('img', class_='tgme_widget_message_photo_img')
         if img_tag and img_tag.get('src'):
             image = img_tag['src']
+            print(f"  -> Найдено фото (Способ А): {image[:50]}...")
         
-        # Способ Б: Картинка фоном (для групп фото или высокого качества)
+        # Способ Б: Фото как фон (div style="background-image...")
         if not image:
             photo_wrap = msg.find('div', class_='tgme_widget_message_photo_wrap')
             if photo_wrap and photo_wrap.get('style'):
-                match = re.search(r"url\(['\"]?(.*?)['\"]?\)", photo_wrap['style'])
+                match = re.search(r'url\(\s*[\'"]?(.*?)[\'"]?\s*\)', photo_wrap['style'])
                 if match:
                     image = match.group(1)
+                    print(f"  -> Найдено фото (Способ Б): {image[:50]}...")
                     
-        # Способ В: Картинка превью ссылки (если пост - это ссылка на сайт)
+        # Способ В: Картинка превью ссылки
         if not image:
             link_preview = msg.find('div', class_='tgme_widget_message_link_preview')
             if link_preview:
-                preview_img = link_preview.find('img')
-                if preview_img and preview_img.get('src'):
-                    image = preview_img['src']
+                prev_img = link_preview.find('img')
+                if prev_img and prev_img.get('src'):
+                    image = prev_img['src']
+                    print(f"  -> Найдено фото (Способ В): {image[:50]}...")
 
-        # Сохраняем ТОЛЬКО если есть текст ИЛИ картинка (отсеиваем пустые сервисные сообщения)
+        # Если текста или фото нет, но мы хотим увидеть, почему фото не найдено, выводим отладку
+        if not image and len(text) > 5: # Если есть текст, но фото нет
+            print(f"  ⚠️ Пост с текстом '{text[:30]}...', но фото НЕ НАЙДЕНО. Проверьте HTML.")
+
+        # Сохраняем пост
         if text or image:
             posts_data.append({
                 'date': date_text,
@@ -93,11 +100,8 @@ def fetch_posts():
                 'image': image,
                 'link': link
             })
-            print(f"✅ Добавлен пост #{len(posts_data)}: Дата={date_text}, Текст={len(text)} симв., Фото={'Да' if image else 'Нет'}")
-        else:
-            print("⚠️ Пропущен пустой/сервисный блок")
 
-    print(f"🏁 ИТОГО: Успешно собрано {len(posts_data)} постов.")
+    print(f"🏁 ИТОГО: Собрано {len(posts_data)} постов.")
 
     with open('posts.json', 'w', encoding='utf-8') as f:
         json.dump(posts_data, f, ensure_ascii=False, indent=2)
