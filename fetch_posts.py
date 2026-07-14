@@ -33,28 +33,12 @@ def fetch_posts():
         if text_tag:
             text = text_tag.get_text(separator='\n', strip=True)
 
-        # 2. Изображение/Медиа
+        # 2. Изображение (Стандартный поиск)
         image = None
-        
-        # Фото
         photo_wrap = msg.find('div', class_='tgme_widget_message_photo_wrap')
         if photo_wrap and photo_wrap.get('style'):
             match = re.search(r'url\(["\']?(.*?)["\']?\)', photo_wrap['style'])
             if match: image = match.group(1)
-        
-        # Видео (обложка)
-        if not image:
-            video_wrap = msg.find('div', class_='tgme_widget_message_video_wrap')
-            if video_wrap and video_wrap.get('style'):
-                match = re.search(r'url\(["\']?(.*?)["\']?\)', video_wrap['style'])
-                if match: image = match.group(1)
-
-        # Превью ссылки
-        if not image:
-            link_preview = msg.find('div', class_='tgme_widget_message_link_preview')
-            if link_preview:
-                img = link_preview.find('img')
-                if img and img.get('src'): image = img['src']
 
         # 3. Дата и ссылка
         date_text = 'Неизвестно'
@@ -72,11 +56,22 @@ def fetch_posts():
             posts_data.append({'date': date_text, 'text': text, 'image': image, 'link': link})
             print(f"✅ Пост #{len(posts_data)}: Текст={len(text)} зн., Фото={'Да' if image else 'Нет'}")
         else:
-            # РЕЖИМ ДЕТЕКТИВА: Печатаем классы и кусок HTML пропущенного блока
-            classes = msg.get('class', [])
-            print(f"⚠️ Блок {i+1} пропущен. Классы: {classes}")
-            inner_html = str(msg)[:400].replace('\n', ' ').replace('  ', ' ')
-            print(f"   Содержимое блока: {inner_html}...")
+            # 🔍 ПОЛНЫЙ РЕЖИМ ДЕТЕКТИВА: Печатаем ВСЕ медиа в пропущенном блоке
+            print(f"⚠️ Блок {i+1} пропущен. Классы: {msg.get('class', [])}")
+            
+            # Ищем все теги img
+            for img in msg.find_all('img'):
+                src = img.get('src', '')
+                classes = img.get('class', [])
+                print(f"   🖼️ Найдена картинка (img):")
+                print(f"      src: {src[:80]}...")
+                print(f"      class: {classes}")
+            
+            # Ищем все фоновые изображения
+            for div in msg.find_all('div'):
+                style = div.get('style', '')
+                if 'background-image' in style and 'telesco.pe' in style:
+                    print(f"   🖼️ Найдено фоновое изображение (div): {style[:100]}...")
 
     print(f"🏁 ИТОГО: Собрано {len(posts_data)} постов.")
     with open('posts.json', 'w', encoding='utf-8') as f:
