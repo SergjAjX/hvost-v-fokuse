@@ -1,87 +1,74 @@
-# fetch_posts.py
 import os
 import json
 import requests
 from bs4 import BeautifulSoup
 import re
 
-# Используем точное имя канала из секретов, по умолчанию HVOST_V_FOKUSE
-CHANNEL_NAME = os.getenv('CHANNEL', 'HVOST_V_FOKUSE').replace('@', '').strip().upper()
+CHANNEL_NAME = os.getenv('CHANNEL', 'HVOST_V_FOKUSE').replace('@', '').strip()
 URL = f'https://t.me/s/{CHANNEL_NAME}'
 
 def fetch_posts():
-    print(f"🔍 Попытка получить данные из публичного канала: {URL}")
+    print(f"🔍 Запрос к: {URL}")
     
-    # Маскируемся под обычный браузер, чтобы Telegram не блокировал запрос
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept-Language': 'ru-RU,ru;q=0.9'
     }
     
-    try:
-        response = requests.get(URL, headers=headers, timeout=15)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        print(f"❌ ОШИБКА СЕТИ: Не удалось подключиться к {URL}")
-        print(f"Детали: {e}")
-        # Создаем файл с сообщением об ошибке, чтобы фронтенд не ломался
-        with open('posts.json', 'w', encoding='utf-8') as f:
-            json.dump([{"error": "Канал недоступен. Проверьте точность имени HVOST_V_FOKUSE и убедитесь, что в канале есть хотя бы один пост."}], f, ensure_ascii=False, indent=2)
-        return
-
-    soup = BeautifulSoup(response.text, 'html.parser')
-    
-    # Проверка на пустой канал или несуществующий
-    if "If you have Telegram, you can view" in response.text or "no posts" in response.text.lower():
-        print(f"⚠️ ВНИМАНИЕ: Канал @{CHANNEL_NAME} не найден, является частным или в нем нет ни одного поста.")
-        with open('posts.json', 'w', encoding='utf-8') as f:
-            json.dump([{"error": "Канал пуст или не является публичным. Добавьте хотя бы один пост и убедитесь, что в настройках канала задана постоянная ссылка."}], f, ensure_ascii=False, indent=2)
-        return
-
     posts = []
-    tg_posts = soup.find_all('div', class_='tgme_widget_message_wrap')
     
-    for post in tg_posts[:5]: # Берем строго последние 5 постов
-        message = post.find('div', class_='tgme_widget_message')
-        if not message:
-            continue
+    try:
+        response = requests.get(URL, headers=headers, timeout=20)
+        print(f"📡 Статус ответа: {response.status_code}")
+        
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            tg_posts = soup.find_all('div', class_='tgme_widget_message_wrap')
+            print(f"📝 Найдено постов в HTML: {len(tg_posts)}")
             
-        # Дата
-        date_tag = message.find('time', class_='tgme_widget_message_date')
-        date_text = date_tag.text.strip() if date_tag else 'Неизвестно'
-        datetime_iso = date_tag['datetime'] if date_tag else ''
-        
-        # Текст
-        text_tag = message.find('div', class_='tgme_widget_message_text')
-        text = text_tag.get_text(separator='\n', strip=True) if text_tag else ''
-        
-        # Изображение
-        image = None
-        img_tag = message.find('img', class_='tgme_widget_message_photo_img')
-        if img_tag and 'src' in img_tag.attrs:
-            image = img_tag['src']
+            for post in tg_posts[:5]:
+                message = post.find('div', class_='tgme_widget_message')
+                if not message:
+                    continue
+                
+                date_tag = message.find('time', class_='tgme_widget_message_date')
+                date_text = date_tag.text.strip() if date_tag else 'Неизвестно'
+                
+                text_tag = message.find('div', class_='tgme_widget_message_text')
+                text = text_tag.get_text(separator='\n', strip=True) if text_tag else ''
+                
+                image = None
+                style_tag = message.find('div', class_='tgme_widget_message_photo_wrap')
+                if style_tag and 'style' in style_tag.attrs:
+                    url_match = re.search(r"url\('(.+?)'\)", style_tag['style'])
+                    if url_match:
+                        image = url_match.group(1)
+                
+                link_tag = message.find('a', class_='tgme_widget_message_date')
+                link = link_tag['href'] if link_tag else f'https://t.me/{CHANNEL_NAME}'
+                
+                posts.append({
+                    'date': date_text,
+                    'text': text,
+                    'image': image,
+                    'link': link
+                })
         else:
-            style_tag = message.find('div', class_='tgme_widget_message_photo_wrap')
-            if style_tag and 'style' in style_tag.attrs:
-                url_match = re.search(r"url\('(.+?)'\)", style_tag['style'])
-                if url_match:
-                    image = url_match.group(1)
-
-        # Ссылка на пост
-        link_tag = message.find('a', class_='tgme_widget_message_date')
-        link = link_tag['href'] if link_tag else f'https://t.me/{CHANNEL_NAME}'
-
-        posts.append({
-            'date': date_text,
-            'datetime': datetime_iso,
-            'text': text,
-            'image': image,
-            'link': link
-        })
-
+            print(f"❌ HTTP {response.status_code}")
+            posts = [{"error": f"Канал вернул код {response.status_code}. Проверьте имя канала."}]
+            
+    except Exception as e:
+        print(f"❌ Исключение: {e}")
+        posts = [{"error": "Ошибка сети. Попробуйте позже."}]
+    
+    # ВСЕГДА сохраняем валидный JSON
     with open('posts.json', 'w', encoding='utf-8') as f:
         json.dump(posts, f, ensure_ascii=False, indent=2)
-    print(f"✅ УСПЕХ! Сохранено {len(posts)} постов в posts.json для канала @{CHANNEL_NAME}")
+    
+    if posts and not posts[0].get('error'):
+        print(f"✅ УСПЕХ! Сохранено {len(posts)} постов")
+    else:
+        print(f"⚠️ Сохранено сообщение об ошибке")
 
 if __name__ == '__main__':
     fetch_posts()
