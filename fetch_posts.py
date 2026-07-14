@@ -25,7 +25,6 @@ def fetch_posts():
     soup = BeautifulSoup(response.text, 'html.parser')
     posts_data = []
 
-    # Берем с запасом 10 блоков
     message_wraps = soup.find_all('div', class_='tgme_widget_message_wrap')[:10]
     print(f"📝 Найдено блоков в HTML: {len(message_wraps)}")
 
@@ -61,36 +60,20 @@ def fetch_posts():
                 br.replace_with('\n')
             text = text_tag.get_text(separator='\n', strip=True)
 
-        # 4. Изображение (МАКСИМАЛЬНО ПОДРОБНЫЙ ПОИСК)
+        # 4. Изображение (УМНЫЙ ПОИСК ПО ДОМЕНУ TELESCO.PE)
         image = None
         
-        # Способ А: Обычное фото (тег img)
-        img_tag = msg.find('img', class_='tgme_widget_message_photo_img')
-        if img_tag and img_tag.get('src'):
-            image = img_tag['src']
-            print(f"  -> Найдено фото (Способ А): {image[:50]}...")
+        # Превращаем весь блок сообщения в строку для гибкого поиска
+        msg_html = str(msg)
         
-        # Способ Б: Фото как фон (div style="background-image...")
-        if not image:
-            photo_wrap = msg.find('div', class_='tgme_widget_message_photo_wrap')
-            if photo_wrap and photo_wrap.get('style'):
-                match = re.search(r'url\(\s*[\'"]?(.*?)[\'"]?\s*\)', photo_wrap['style'])
-                if match:
-                    image = match.group(1)
-                    print(f"  -> Найдено фото (Способ Б): {image[:50]}...")
-                    
-        # Способ В: Картинка превью ссылки
-        if not image:
-            link_preview = msg.find('div', class_='tgme_widget_message_link_preview')
-            if link_preview:
-                prev_img = link_preview.find('img')
-                if prev_img and prev_img.get('src'):
-                    image = prev_img['src']
-                    print(f"  -> Найдено фото (Способ В): {image[:50]}...")
-
-        # Если текста или фото нет, но мы хотим увидеть, почему фото не найдено, выводим отладку
-        if not image and len(text) > 5: # Если есть текст, но фото нет
-            print(f"  ⚠️ Пост с текстом '{text[:30]}...', но фото НЕ НАЙДЕНО. Проверьте HTML.")
+        # Ищем любую ссылку на картинку Telegram (cdn4.telesco.pe/file/...)
+        # Это работает для обычных фото, альбомов, круглых видео и превью
+        img_match = re.search(r'(https://cdn\d+\.telesco\.pe/file/[^\s\'"<>]+)', msg_html)
+        if img_match:
+            image = img_match.group(1)
+            print(f"  ✅ Найдено фото по домену telesco.pe для поста: '{text[:30]}...'")
+        else:
+            print(f"  ⚠️ Фото НЕ НАЙДЕНО для поста: '{text[:30]}...'")
 
         # Сохраняем пост
         if text or image:
