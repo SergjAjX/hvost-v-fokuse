@@ -1,87 +1,92 @@
 import os
 import json
 import requests
+from bs4 import BeautifulSoup
 import re
-import html
 
 CHANNEL_NAME = os.getenv('CHANNEL', 'HVOST_V_FOKUSE').replace('@', '').strip()
 URL = f'https://t.me/s/{CHANNEL_NAME}'
 
 def fetch_posts():
-    print(f"🔍 Запрос к: {URL}")
-
-    # Максимально реалистичные заголовки обычного браузера Chrome
+    print(f"🔍 Запрос к публичному каналу: {URL}")
+    
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'none',
+        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8'
     }
 
     try:
         response = requests.get(URL, headers=headers, timeout=20)
-        print(f"📡 Статус ответа Telegram: {response.status_code}")
-
-        if response.status_code != 200:
-            error_msg = f"Telegram вернул код {response.status_code} (возможна блокировка запросов с IP GitHub)."
-            print(f"❌ {error_msg}")
-            with open('posts.json', 'w', encoding='utf-8') as f:
-                json.dump([{"error": error_msg}], f, ensure_ascii=False, indent=2)
-            return
-
-        posts = []
-        # Ищем блоки сообщений с помощью регулярных выражений (самый надежный способ для t.me/s/)
-        post_blocks = re.findall(r'<div class="tgme_widget_message_wrap.*?</div>\s*</div>', response.text, re.DOTALL)
-        
-        print(f"📝 Найдено блоков постов в HTML: {len(post_blocks)}")
-
-        for block in post_blocks[:5]: # Берем только 5 последних
-            # 1. Дата
-            date_match = re.search(r'<time class="tgme_widget_message_date"[^>]*>(.*?)</time>', block)
-            date_text = date_match.group(1).strip() if date_match else 'Неизвестно'
-            
-            # 2. Ссылка на пост
-            link_match = re.search(r'<a class="tgme_widget_message_date"[^>]*href="(.*?)"', block)
-            link = link_match.group(1) if link_match else f'https://t.me/{CHANNEL_NAME}'
-            
-            # 3. Текст (очищаем от HTML-тегов)
-            text_match = re.search(r'<div class="tgme_widget_message_text[^>]*>(.*?)</div>', block, re.DOTALL)
-            if text_match:
-                text = re.sub(r'<[^>]+>', '\n', text_match.group(1))
-                text = re.sub(r'\n+', '\n', text).strip()
-                text = html.unescape(text) # Преобразуем &quot; и т.д.
-            else:
-                text = ''
-
-            # 4. Картинка (ищем в style или в img src)
-            img_match = re.search(r'background-image:url\((.*?)\)', block)
-            if not img_match:
-                img_match = re.search(r'<img class="tgme_widget_message_photo_img"[^>]*src="(.*?)"', block)
-            
-            image = img_match.group(1) if img_match else None
-
-            # Добавляем пост, только если в нем есть текст или картинка
-            if text or image:
-                posts.append({
-                    'date': date_text,
-                    'text': text,
-                    'image': image,
-                    'link': link
-                })
-
-        print(f"✅ УСПЕХ! Корректно обработано {len(posts)} постов.")
-        
-        with open('posts.json', 'w', encoding='utf-8') as f:
-            json.dump(posts, f, ensure_ascii=False, indent=2)
-
+        response.raise_for_status()
     except Exception as e:
-        print(f"❌ КРИТИЧЕСКАЯ ОШИБКА СКРИПТА: {e}")
+        print(f"❌ Ошибка сети: {e}")
         with open('posts.json', 'w', encoding='utf-8') as f:
-            json.dump([{"error": f"Сбой скрипта: {str(e)}"}], f, ensure_ascii=False, indent=2)
+            json.dump([{"error": "Не удалось подключиться к Telegram"}], f, ensure_ascii=False, indent=2)
+        return
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    posts_data = []
+
+    # Находим все блоки сообщений на странице
+    message_wraps = soup.find_all('div', class_='tgme_widget_message_wrap')
+
+    for wrap in message_wraps:
+        # Непосредственно контейнер самого сообщения
+        msg = wrap.find('div', class_='tgme_widget_message')
+        if not msg:
+            continue
+
+        # 1. Дата и время
+        date_tag = msg.find('time', class_='tgme_widget_message_date')
+        date_text = date_tag.text.strip() if date_tag else 'Неизвестно'
+
+        # 2. Ссылка на конкретный пост
+        link_tag = msg.find('a', class_='tgme_widget_message_date')
+        link = link_tag['href'] if link_tag and 'href' in link_tag.attrs else f'https://t.me/{CHANNEL_NAME}'
+
+        # 3. Текст поста
+        text = ""
+        text_tag = msg.find('div', class_='tgme_widget_message_text')
+        if text_tag:
+            # Заменяем переносы строк <br> на реальные символы \n перед извлечением текста
+            for br in text_tag.find_all('br'):
+                br.replace_with('\n')
+            text = text_tag.get_text(separator='\n', strip=True)
+
+        # 4. Изображение (проверяем два варианта, которые использует Telegram)
+        image = None
+        
+        # Вариант А: обычная картинка в теге img
+        img_tag = msg.find('img', class_='tgme_widget_message_photo_img')
+        if img_tag and 'src' in img_tag.attrs:
+            image = img_tag['src']
+        else:
+            # Вариант Б: картинка как фон (background-image)
+            photo_wrap = msg.find('div', class_='tgme_widget_message_photo_wrap')
+            if photo_wrap and 'style' in photo_wrap.attrs:
+                style = photo_wrap['style']
+                match = re.search(r"url\(['\"]?(.*?)['\"]?\)", style)
+                if match:
+                    image = match.group(1)
+
+        # Сохраняем пост, только если в нем есть реальный контент (текст или картинка)
+        if text or image:
+            posts_data.append({
+                'date': date_text,
+                'text': text,
+                'image': image,
+                'link': link
+            })
+
+        # Останавливаемся, когда собрали 5 постов
+        if len(posts_data) >= 5:
+            break
+
+    print(f"✅ Успешно обработано {len(posts_data)} реальных постов.")
+
+    # Сохраняем результат в файл
+    with open('posts.json', 'w', encoding='utf-8') as f:
+        json.dump(posts_data, f, ensure_ascii=False, indent=2)
 
 if __name__ == '__main__':
     fetch_posts()
