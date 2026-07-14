@@ -25,7 +25,7 @@ def fetch_posts():
     soup = BeautifulSoup(response.text, 'html.parser')
     posts_data = []
 
-    # Находим все блоки сообщений на странице
+    # Находим все блоки сообщений
     messages = soup.find_all('div', class_='tgme_widget_message')
     print(f"📝 Найдено сообщений в HTML: {len(messages)}")
 
@@ -33,7 +33,7 @@ def fetch_posts():
         if len(posts_data) >= 5:
             break
 
-        # 1. Текст поста (строгий поиск по классу текста)
+        # 1. Текст: ищем строго в теле сообщения
         text = ""
         text_tag = msg.find('div', class_='tgme_widget_message_text')
         if text_tag:
@@ -41,29 +41,43 @@ def fetch_posts():
                 br.replace_with('\n')
             text = text_tag.get_text(separator='\n', strip=True)
 
-        # 2. Изображение поста (СТРОГИЙ ПОИСК, исключающий аватарку канала)
+        # 2. Изображение: МНОГОУРОВНЕВЫЙ ПОИСК
         image = None
         
-        # Способ А: Обертка фото (самый частый и надежный вариант для постов с картинкой)
+        # А. Фото как фон (основной способ Telegram для постов с фото)
         photo_wrap = msg.find('div', class_='tgme_widget_message_photo_wrap')
         if photo_wrap and photo_wrap.get('style'):
             match = re.search(r'url\(\s*[\'"]?(.*?)[\'"]?\s*\)', photo_wrap['style'])
             if match:
                 image = match.group(1)
         
-        # Способ Б: Тег img с классом фото сообщения (если нет wrap)
+        # Б. Видео/Гифка как фон
         if not image:
-            img_tag = msg.find('img', class_='tgme_widget_message_photo_img')
-            if img_tag and img_tag.get('src'):
-                image = img_tag['src']
-                
-        # Способ В: Превью ссылки (если пост - это ссылка на внешнюю статью)
+            video_wrap = msg.find('div', class_='tgme_widget_message_video_wrap')
+            if video_wrap and video_wrap.get('style'):
+                match = re.search(r'url\(\s*[\'"]?(.*?)[\'"]?\s*\)', video_wrap['style'])
+                if match:
+                    image = match.group(1)
+
+        # В. Превью внешней ссылки
         if not image:
             link_preview = msg.find('div', class_='tgme_widget_message_link_preview')
             if link_preview:
                 prev_img = link_preview.find('img')
                 if prev_img and prev_img.get('src'):
                     image = prev_img['src']
+
+        # Г. ЗАПАСНОЙ ВАРИАНТ: Любая картинка внутри ТЕЛА сообщения (исключает аватарку канала!)
+        if not image:
+            body = msg.find('div', class_='tgme_widget_message_body')
+            if body:
+                imgs = body.find_all('img')
+                for img in imgs:
+                    src = img.get('src', '')
+                    # Проверяем, что это реальное медиа Telegram, а не смайлик или иконка
+                    if 'cdn' in src and 'telesco.pe' in src:
+                        image = src
+                        break
 
         # 3. Дата
         date_text = 'Неизвестно'
@@ -75,13 +89,13 @@ def fetch_posts():
             if date_tag and 'datetime' in date_tag.attrs:
                 date_text = date_tag.attrs['datetime'][:10]
 
-        # 4. Ссылка на пост
+        # 4. Ссылка
         link = f'https://t.me/{CHANNEL_NAME}'
         link_tag = msg.find('a', class_='tgme_widget_message_date')
         if link_tag and 'href' in link_tag.attrs:
             link = link_tag['href']
 
-        # Сохраняем пост, если есть текст ИЛИ изображение (или и то, и другое)
+        # Сохраняем, если есть текст ИЛИ изображение (теперь посты только с фото тоже сохранятся!)
         if text or image:
             posts_data.append({
                 'date': date_text,
@@ -90,6 +104,8 @@ def fetch_posts():
                 'link': link
             })
             print(f"✅ Добавлен: Дата={date_text}, Текст={len(text)} зн., Фото={'Да' if image else 'Нет'}")
+        else:
+            print(f"⏩ Пропущен пустой/сервисный блок")
 
     print(f"🏁 ИТОГО: Собрано {len(posts_data)} постов.")
 
