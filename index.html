@@ -3,933 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Хвост в фокусе — Портреты питомцев в поисках дома</title>
-    <meta name="description" content="Портреты хвостатых, которым нужна семья. До/после с историями пристроенных звёзд. Живые эмоции, мокрые носы и виляющие хвосты в фокусе. Поможем найти дом.">
-    <meta name="keywords" content="приют для животных, питомцы в дар, собаки в добрые руки, кошки в дар, бездомные животные, пристроить питомца, фото животных, портреты питомцев">
-    <meta name="author" content="Хвост в фокусе">
-    <meta name="robots" content="index, follow">
-
+    <title>Хвост в Фокусе | Официальный канал</title>
+    
+    <!-- SEO & AI Optimization -->
+    <meta name="description" content="Хвост в Фокусе — официальный Telegram канал. Актуальные новости, фото и жизнь хвостатых друзей. Подпишитесь, чтобы быть в курсе последних событий.">
+    <meta name="keywords" content="хвост в фокусе, телеграм канал, животные, новости, блог">
+    <meta name="author" content="Администрация Хвост в Фокусе">
+    
+    <!-- Open Graph / Facebook / AI crawlers -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Хвост в фокусе — Портреты питомцев в поисках дома">
-    <meta property="og:description" content="Помогаем их лучшему кадру стать вашим лучшим другом. Мокрые носы и виляющие хвосты в фокусе.">
     <meta property="og:url" content="https://sergjajx.github.io/hvost-v-fokuse/">
-    <meta property="og:site_name" content="Хвост в фокусе">
-    <meta property="og:locale" content="ru_RU">
+    <meta property="og:title" content="Хвост в Фокусе | Telegram канал">
+    <meta property="og:description" content="Последние новости и посты из канала Хвост в Фокусе. Подпишитесь прямо сейчас!">
+    <meta property="og:image" content="https://t.me/i/userpic/320/hvost_v_fokuse.jpg"> <!-- Замените на реальную ссылку на аватар -->
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Хвост в фокусе">
-    <meta name="twitter:description" content="Портреты питомцев в поисках дома">
-
-    <link rel="canonical" href="https://sergjajx.github.io/hvost-v-fokuse/">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐾</text></svg>">
-
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <!-- JSON-LD для поисковых систем и ИИ -->
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Хвост в Фокусе",
+      "url": "https://sergjajx.github.io/hvost-v-fokuse/",
+      "description": "Официальный сайт-визитка Telegram канала Хвост в Фокусе",
+      "publisher": {
         "@type": "Organization",
-        "name": "Хвост в фокусе",
-        "description": "Портреты питомцев в поисках дома",
-        "url": "https://t.me/hvost_v_fokuse",
-        "sameAs": ["https://t.me/hvost_v_fokuse"]
+        "name": "Хвост в Фокусе",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "Customer Support",
+          "availableLanguage": "Russian"
+        }
+      }
     }
     </script>
 
-    <style>
-        :root {
-            --warm-cream: #FFF8F0;
-            --soft-sand: #F5E6D3;
-            --terracotta: #C4705A;
-            --deep-terracotta: #A85A42;
-            --forest-green: #4A7C59;
-            --deep-green: #3A6347;
-            --charcoal: #2C2C2C;
-            --warm-gray: #6B6B6B;
-            --light-gray: #E8E0D8;
-            --white: #FFFFFF;
-            --accent-gold: #D4A574;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--warm-cream);
-            color: var(--charcoal);
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: linear-gradient(135deg, var(--warm-cream) 0%, var(--soft-sand) 50%, var(--warm-cream) 100%);
-            position: relative;
-            padding: 2rem;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C4705A' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.6;
-        }
-
-        .hero-content { position: relative; z-index: 1; max-width: 800px; }
-
-        .hero-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            animation: gentleBounce 3s ease-in-out infinite;
-        }
-
-        @keyframes gentleBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 700;
-            color: var(--charcoal);
-            margin-bottom: 0.5rem;
-            line-height: 1.1;
-        }
-
-        .hero .subtitle {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: var(--terracotta);
-            margin-bottom: 2rem;
-            font-style: italic;
-        }
-
-        .hero-description {
-            font-size: 1.1rem;
-            color: var(--warm-gray);
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--terracotta);
-            color: var(--white);
-            box-shadow: 0 4px 20px rgba(196, 112, 90, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--deep-terracotta);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(196, 112, 90, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--white);
-            color: var(--terracotta);
-            border: 2px solid var(--terracotta);
-        }
-
-        .btn-secondary:hover {
-            background: var(--terracotta);
-            color: var(--white);
-            transform: translateY(-2px);
-        }
-
-        .btn-gold {
-            background: var(--accent-gold);
-            color: var(--charcoal);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .btn-gold:hover {
-            background: #c4956a;
-            transform: translateY(-2px);
-        }
-
-        .btn-small {
-            padding: 0.5rem 1.2rem;
-            font-size: 0.85rem;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: scrollPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes scrollPulse {
-            0%, 100% { opacity: 0.5; transform: translateX(-50%) translateY(0); }
-            50% { opacity: 1; transform: translateX(-50%) translateY(8px); }
-        }
-
-        section {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 3rem);
-            text-align: center;
-            margin-bottom: 1rem;
-            color: var(--charcoal);
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: var(--warm-gray);
-            max-width: 600px;
-            margin: 0 auto 3rem;
-        }
-
-        .about-section {
-            background: var(--white);
-            border-radius: 30px;
-            padding: 4rem 3rem;
-            margin: 2rem auto;
-            box-shadow: 0 10px 60px rgba(0,0,0,0.06);
-        }
-
-        .mission-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .mission-card {
-            text-align: center;
-            padding: 2rem;
-            border-radius: 20px;
-            background: var(--warm-cream);
-            transition: all 0.3s ease;
-        }
-
-        .mission-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-        }
-
-        .mission-card i {
-            font-size: 2.5rem;
-            color: var(--terracotta);
-            margin-bottom: 1rem;
-        }
-
-        .mission-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .mission-card p {
-            color: var(--warm-gray);
-            font-size: 0.95rem;
-        }
-
-        .posts-section {
-            background: linear-gradient(180deg, var(--warm-cream) 0%, var(--soft-sand) 100%);
-            margin: 0 -2rem;
-            padding: 5rem 2rem;
-        }
-
-        .posts-container { max-width: 1200px; margin: 0 auto; }
-
-        .posts-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-
-        .posts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
-        .post-card {
-            background: var(--white);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.08);
-            transition: all 0.4s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .post-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-        }
-
-        .post-image {
-            width: 100%;
-            height: 220px;
-            background: linear-gradient(135deg, var(--soft-sand), var(--light-gray));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .post-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .post-card:hover .post-image img {
-            transform: scale(1.05);
-        }
-
-        .post-image i {
-            font-size: 3rem;
-            color: var(--terracotta);
-            opacity: 0.6;
-        }
-
-        .post-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: var(--forest-green);
-            color: var(--white);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            z-index: 2;
-        }
-
-        .post-badge.urgent { background: #C45A5A; }
-        .post-badge.success { background: var(--forest-green); }
-        .post-badge.photo { background: var(--accent-gold); color: var(--charcoal); }
-
-        .post-content {
-            padding: 1.5rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .post-date {
-            font-size: 0.8rem;
-            color: var(--warm-gray);
-            margin-bottom: 0.5rem;
-        }
-
-        .post-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: var(--charcoal);
-        }
-
-        .post-excerpt {
-            color: var(--warm-gray);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            flex: 1;
-        }
-
-        .post-link {
-            color: var(--terracotta);
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            transition: gap 0.3s ease;
-        }
-
-        .post-link:hover { gap: 0.6rem; }
-
-        .loading-spinner {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 4rem;
-            grid-column: 1 / -1;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--light-gray);
-            border-top-color: var(--terracotta);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .error-message {
-            text-align: center;
-            padding: 3rem;
-            grid-column: 1 / -1;
-            color: var(--warm-gray);
-        }
-
-        .error-message i {
-            font-size: 3rem;
-            color: var(--terracotta);
-            margin-bottom: 1rem;
-        }
-
-        .tg-widget-section {
-            background: var(--white);
-            margin: 0 -2rem;
-            padding: 5rem 2rem;
-        }
-
-        .tg-widget-container {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .tg-widget-frame {
-            width: 100%;
-            max-width: 600px;
-            height: 500px;
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin: 2rem auto 0;
-            display: block;
-        }
-
-        .admins-section { background: var(--white); }
-
-        .admins-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .admin-card {
-            background: var(--warm-cream);
-            border-radius: 24px;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .admin-card:hover {
-            border-color: var(--terracotta);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(0,0,0,0.08);
-        }
-
-        .admin-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--terracotta), var(--accent-gold));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2.5rem;
-            color: var(--white);
-            overflow: hidden;
-        }
-
-        .admin-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .admin-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .admin-role {
-            color: var(--terracotta);
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .admin-bio {
-            color: var(--warm-gray);
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .admin-contact {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.5rem;
-            background: var(--terracotta);
-            color: var(--white);
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .admin-contact:hover {
-            background: var(--deep-terracotta);
-            transform: scale(1.05);
-        }
-
-        .share-section {
-            text-align: center;
-            padding: 3rem 2rem;
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-        }
-
-        .share-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-            font-size: 0.95rem;
-        }
-
-        .share-tg { background: #0088cc; color: white; }
-        .share-tg:hover { background: #0077b3; transform: translateY(-2px); }
-
-        .share-vk { background: #4a76a8; color: white; }
-        .share-vk:hover { background: #3d6696; transform: translateY(-2px); }
-
-        .share-wa { background: #25d366; color: white; }
-        .share-wa:hover { background: #1ebe5a; transform: translateY(-2px); }
-
-        .share-copy { background: var(--charcoal); color: white; }
-        .share-copy:hover { background: #1a1a1a; transform: translateY(-2px); }
-
-        footer {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: var(--warm-gray);
-            font-size: 0.9rem;
-        }
-
-        footer a { color: var(--terracotta); text-decoration: none; }
-
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @media (max-width: 768px) {
-            .about-section { padding: 2.5rem 1.5rem; }
-            .admin-card, .mission-card { padding: 1.5rem; }
-            .posts-header { flex-direction: column; }
-            .share-buttons { flex-direction: column; align-items: center; }
-            .share-btn { width: 220px; justify-content: center; }
-            .tg-widget-frame { height: 400px; }
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--charcoal);
-            color: var(--white);
-            padding: 1rem 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            z-index: 2000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.4s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast i { color: var(--accent-gold); }
-    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tg: {
+                            blue: '#2AABEE',
+                            dark: '#17212B',
+                            light: '#F5F5F5'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Yandex.Metrika counter (ЗАМЕНИТЕ XXXXXXXX НА ВАШ НОМЕР) -->
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+       ym(XXXXXXXX, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/XXXXXXXX" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <!-- Google Analytics 4 (ЗАМЕНИТЕ G-XXXXXXXXXX НА ВАШ ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
 
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-icon">🐾</div>
-            <h1>Хвост в фокусе</h1>
-            <p class="subtitle">Портреты питомцев в поисках дома</p>
-            <p class="hero-description">
-                Помогаем их лучшему кадру стать вашим лучшим другом. 
-                Живые эмоции, мокрые носы и виляющие хвосты — всё в фокусе.
-            </p>
-            <div class="cta-buttons">
-                <a href="https://t.me/hvost_v_fokuse" target="_blank" class="btn btn-primary">
-                    <i class="fab fa-telegram"></i> Подписаться
+    <div class="max-w-3xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        
+        <!-- Header / Hero -->
+        <header class="text-center mb-10 bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <div class="w-24 h-24 mx-auto bg-tg-blue rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4 shadow-md">
+                ХФ
+            </div>
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Хвост в Фокусе</h1>
+            <p class="text-gray-600 mb-6 text-lg">Официальный сайт-визитка Telegram канала</p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="https://t.me/hvost_v_fokuse" target="_blank" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-tg-blue hover:bg-blue-600 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
+                    Подписаться на канал
                 </a>
-                <a href="#posts" class="btn btn-secondary">
-                    <i class="fas fa-images"></i> Последние посты
-                </a>
-            </div>
-        </div>
-        <div class="scroll-indicator">
-            <i class="fas fa-chevron-down" style="font-size: 1.5rem; color: var(--terracotta);"></i>
-        </div>
-    </section>
-
-    <section class="about-section fade-in">
-        <h2 class="section-title">О проекте</h2>
-        <p class="section-subtitle">
-            Мы верим, что каждый хвост заслуживает тёплого дома и любящей семьи
-        </p>
-        <div class="mission-grid">
-            <div class="mission-card">
-                <i class="fas fa-camera"></i>
-                <h3>Портреты в поисках семьи</h3>
-                <p>Снимаем трогательные портреты бездомных животных, чтобы показать их характер и душу</p>
-            </div>
-            <div class="mission-card">
-                <i class="fas fa-heart"></i>
-                <h3>Истории «До / После»</h3>
-                <p>Делимся вдохновляющими историями питомцев, нашедших свой дом и любящих хозяев</p>
-            </div>
-            <div class="mission-card">
-                <i class="fas fa-home"></i>
-                <h3>Помогаем найти дом</h3>
-                <p>Каждый пост — это шанс для питомца обрести семью. Мы соединяем сердца</p>
-            </div>
-            <div class="mission-card">
-                <i class="fas fa-paw"></i>
-                <h3>Живые эмоции</h3>
-                <p>Мокрые носы, виляющие хвосты и искренние глаза — всё это в нашем фокусе</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="posts-section" id="posts">
-        <div class="posts-container">
-            <div class="posts-header">
-                <div>
-                    <h2 class="section-title fade-in" style="margin-bottom:0">Последние публикации</h2>
-                    <p class="section-subtitle fade-in" style="margin-bottom:0;margin-top:0.5rem">Свежие истории из канала</p>
-                </div>
-                <button class="btn btn-secondary btn-small" onclick="fetchPosts()">
-                    <i class="fas fa-sync-alt"></i> Обновить
+                <button onclick="sharePage()" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 transition-all shadow-sm">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                    Поделиться
                 </button>
             </div>
-            <div class="posts-grid" id="postsGrid">
-                <div class="loading-spinner">
-                    <div class="spinner"></div>
+        </header>
+
+        <!-- Цели и Описание -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <span class="bg-tg-blue text-white rounded-lg p-1 mr-2">🎯</span> О канале и целях
+            </h2>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    Добро пожаловать на официальную страницу канала <strong>«Хвост в Фокусе»</strong>. 
+                    Мы создали этот проект, чтобы делиться уникальными моментами, полезной информацией и актуальными новостями.
+                </p>
+                <ul class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <li class="bg-blue-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-1">📸</div>
+                        <div class="font-semibold text-gray-800">Эксклюзивный контент</div>
+                    </li>
+                    <li class="bg-blue-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-1">🤝</div>
+                        <div class="font-semibold text-gray-800">Открытое сообщество</div>
+                    </li>
+                    <li class="bg-blue-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl mb-1">⚡</div>
+                        <div class="font-semibold text-gray-800">Оперативные новости</div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Лента постов -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <span class="bg-tg-blue text-white rounded-lg p-1 mr-2">📝</span> Последние посты
+            </h2>
+            <div id="posts-container" class="space-y-6">
+                <!-- Посты будут загружены здесь через JS -->
+                <div class="text-center py-8 text-gray-500">Загрузка последних постов...</div>
+            </div>
+        </section>
+
+        <!-- Администраторы -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <span class="bg-tg-blue text-white rounded-lg p-1 mr-2">👑</span> Администрация и контакты
+            </h2>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <p class="text-gray-600 mb-4 text-sm">По вопросам сотрудничества, рекламы и предложениям обращайтесь к администраторам канала:</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- ЗАМЕНИТЕ @username НА РЕАЛЬНЫЕ НИКНЕЙМЫ АДМИНИСТРАТОРОВ -->
+                    <a href="https://t.me/admin1" target="_blank" class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors border border-gray-200">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold mr-3">A1</div>
+                        <div>
+                            <div class="font-semibold text-gray-900">Администратор 1</div>
+                            <div class="text-sm text-tg-blue">@admin1</div>
+                        </div>
+                    </a>
+                    <a href="https://t.me/admin2" target="_blank" class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors border border-gray-200">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold mr-3">A2</div>
+                        <div>
+                            <div class="font-semibold text-gray-900">Администратор 2</div>
+                            <div class="text-sm text-tg-blue">@admin2</div>
+                        </div>
+                    </a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="tg-widget-section fade-in">
-        <div class="tg-widget-container">
-            <h2 class="section-title">Наш канал в Telegram</h2>
-            <p class="section-subtitle">Все публикации в реальном времени</p>
-            <iframe 
-                class="tg-widget-frame"
-                src="https://t.me/hvost_v_fokuse?embed=1"
-                sandbox="allow-scripts allow-same-origin allow-popups"
-                loading="lazy"
-                title="Канал Хвост в фокусе">
-            </iframe>
-            <div style="margin-top: 1.5rem;">
-                <a href="https://t.me/hvost_v_fokuse" target="_blank" class="btn btn-primary">
-                    <i class="fab fa-telegram"></i> Открыть в Telegram
-                </a>
-            </div>
-        </div>
-    </section>
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm py-6 border-t border-gray-200">
+            <p>&copy; <span id="year"></span> Хвост в Фокусе. Все права защищены.</p>
+            <p class="mt-2">Сайт работает на GitHub Pages</p>
+        </footer>
 
-    <section class="admins-section" id="admins">
-        <h2 class="section-title fade-in">Связаться с нами</h2>
-        <p class="section-subtitle fade-in">Напишите администраторам канала — поможем с пристройством</p>
-        <div class="admins-grid" id="adminsGrid"></div>
-    </section>
-
-    <section class="share-section fade-in">
-        <h2 class="section-title">Расскажите друзьям</h2>
-        <p class="section-subtitle">Помогите питомцам найти дом — поделитесь ссылкой</p>
-        <div class="share-buttons">
-            <a href="#" class="share-btn share-tg" onclick="shareTelegram(event)">
-                <i class="fab fa-telegram"></i> Telegram
-            </a>
-            <a href="#" class="share-btn share-vk" onclick="shareVK(event)">
-                <i class="fab fa-vk"></i> ВКонтакте
-            </a>
-            <a href="#" class="share-btn share-wa" onclick="shareWhatsApp(event)">
-                <i class="fab fa-whatsapp"></i> WhatsApp
-            </a>
-            <button class="share-btn share-copy" onclick="copyLink()">
-                <i class="fas fa-link"></i> Скопировать ссылку
-            </button>
-        </div>
-    </section>
-
-    <footer>
-        <p>🐾 Хвост в фокусе — с любовью к хвостатым</p>
-        <p style="margin-top: 0.5rem; font-size: 0.8rem;">
-            <a href="https://t.me/hvost_v_fokuse" target="_blank">t.me/hvost_v_fokuse</a>
-        </p>
-    </footer>
-
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastText">Готово!</span>
     </div>
 
     <script>
-        const CONFIG = {
-            channel: 'hvost_v_fokuse',
-            channelUrl: 'https://t.me/hvost_v_fokuse',
-            siteUrl: 'https://sergjajx.github.io/hvost-v-fokuse/'
-        };
+        // Установка текущего года
+        document.getElementById('year').textContent = new Date().getFullYear();
 
-        const ADMINS = [
-            {
-                name: 'Анна',
-                role: 'Администратор',
-                bio: 'Отвечает на вопросы о питомцах, помогает с пристройством',
-                telegram: 'https://t.me/anna_hvost',
-                avatar: null,
-                icon: 'fas fa-user'
-            },
-            {
-                name: 'Мария',
-                role: 'Администратор',
-                bio: 'Фотографирует питомцев, ведёт контент канала',
-                telegram: 'https://t.me/maria_photo_hvost',
-                avatar: null,
-                icon: 'fas fa-camera'
-            },
-            {
-                name: 'Ольга',
-                role: 'Администратор',
-                bio: 'Координирует волонтёров, организует встречи',
-                telegram: 'https://t.me/olga_volonter',
-                avatar: null,
-                icon: 'fas fa-hands-helping'
-            }
-        ];
-
-        function showToast(text) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastText').textContent = text;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-        function renderAdmins() {
-            const grid = document.getElementById('adminsGrid');
-            grid.innerHTML = '';
-
-            ADMINS.forEach((admin, index) => {
-                const card = document.createElement('div');
-                card.className = 'admin-card fade-in';
-                card.style.animationDelay = `${index * 0.15}s`;
-
-                const avatarHtml = admin.avatar 
-                    ? `<img src="${admin.avatar}" alt="${admin.name}" loading="lazy">`
-                    : `<i class="${admin.icon}"></i>`;
-
-                card.innerHTML = `
-                    <div class="admin-avatar">${avatarHtml}</div>
-                    <h3 class="admin-name">${admin.name}</h3>
-                    <p class="admin-role">${admin.role}</p>
-                    <p class="admin-bio">${admin.bio}</p>
-                    <a href="${admin.telegram}" target="_blank" class="admin-contact" rel="noopener">
-                        <i class="fab fa-telegram"></i> Написать в Telegram
-                    </a>
-                `;
-
-                grid.appendChild(card);
-                observer.observe(card);
-            });
-        }
-
-        function renderPosts(posts) {
-            const grid = document.getElementById('postsGrid');
-            grid.innerHTML = '';
-
-            posts.forEach((post, index) => {
-                const card = document.createElement('article');
-                card.className = 'post-card fade-in';
-                card.style.animationDelay = `${index * 0.1}s`;
-
-                const imageHtml = post.image 
-                    ? `<img src="${post.image}" alt="${post.title}" loading="lazy">`
-                    : `<i class="fas fa-paw"></i>`;
-
-                card.innerHTML = `
-                    <div class="post-image">
-                        ${imageHtml}
-                        ${post.badge ? `<span class="post-badge ${post.badgeClass}">${post.badge}</span>` : ''}
-                    </div>
-                    <div class="post-content">
-                        <time class="post-date" datetime="${post.date}"><i class="far fa-calendar-alt"></i> ${post.date}</time>
-                        <h3 class="post-title">${post.title}</h3>
-                        <p class="post-excerpt">${post.text}</p>
-                        <a href="${post.link}" target="_blank" class="post-link" rel="noopener">
-                            Читать в Telegram <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                `;
-
-                grid.appendChild(card);
-                observer.observe(card);
-            });
-        }
-
-        // Читаем posts.json — тот же домен, нет CORS!
-        async function fetchPosts() {
-            const grid = document.getElementById('postsGrid');
-            grid.innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
-
-            try {
-                const response = await fetch('posts.json', { 
-                    cache: 'no-cache',
-                    signal: AbortSignal.timeout(5000)
+        // Функция "Поделиться"
+        function sharePage() {
+            const shareData = {
+                title: 'Хвост в Фокусе',
+                text: 'Загляни в этот крутой Telegram канал!',
+                url: window.location.href
+            };
+            
+            if (navigator.share) {
+                navigator.share(shareData).catch(console.error);
+            } else {
+                // Fallback для ПК: копирование в буфер обмена
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Ссылка скопирована в буфер обмена!');
                 });
-
-                if (!response.ok) throw new Error('posts.json not found');
-
-                const posts = await response.json();
-
-                if (!Array.isArray(posts) || posts.length === 0) {
-                    throw new Error('No posts in JSON');
-                }
-
-                renderPosts(posts);
-            } catch (e) {
-                console.log('Error loading posts:', e.message);
-                showError('Посты обновляются. Пока смотрите канал в Telegram ↓');
             }
         }
 
-        function showError(message) {
-            const grid = document.getElementById('postsGrid');
-            grid.innerHTML = `
-                <div class="error-message">
-                    <i class="fas fa-clock"></i>
-                    <p>${message}</p>
-                    <a href="https://t.me/hvost_v_fokuse" target="_blank" class="btn btn-primary" style="margin-top:1rem">
-                        <i class="fab fa-telegram"></i> Перейти в канал
-                    </a>
-                </div>
-            `;
+        // Загрузка и отображение постов
+        async function loadPosts() {
+            try {
+                // Добавляем timestamp чтобы избежать кэширования браузером
+                const response = await fetch('posts.json?t=' + new Date().getTime());
+                if (!response.ok) throw new Error('Network response was not ok');
+                const posts = await response.json();
+                
+                const container = document.getElementById('posts-container');
+                container.innerHTML = ''; // Очистка
+
+                posts.forEach(post => {
+                    const postEl = document.createElement('div');
+                    postEl.className = 'bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow';
+                    
+                    let imageHtml = '';
+                    if (post.image) {
+                        imageHtml = `<img src="${post.image}" alt="Изображение поста" class="w-full h-64 object-cover" loading="lazy">`;
+                    }
+
+                    // Преобразуем переносы строк в <br> и ссылки в кликабельные
+                    const textHtml = post.text
+                        .replace(/\n/g, '<br>')
+                        .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-tg-blue hover:underline">$1</a>');
+
+                    postEl.innerHTML = `
+                        ${imageHtml}
+                        <div class="p-5">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded">${post.date}</span>
+                                <a href="${post.link}" target="_blank" class="text-sm text-tg-blue hover:text-blue-700 font-medium flex items-center">
+                                    Открыть в Telegram
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </a>
+                            </div>
+                            <div class="text-gray-800 leading-relaxed text-sm sm:text-base">
+                                ${textHtml || '<em class="text-gray-400">Пост без текста (возможно, только опрос или приложение)</em>'}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(postEl);
+                });
+            } catch (error) {
+                console.error('Ошибка загрузки постов:', error);
+                document.getElementById('posts-container').innerHTML = `
+                    <div class="bg-red-50 text-red-700 p-4 rounded-lg text-center">
+                        Не удалось загрузить посты. Пожалуйста, зайдите в наш <a href="https://t.me/hvost_v_fokuse" class="underline font-bold">Telegram канал</a>.
+                    </div>
+                `;
+            }
         }
 
-        const shareText = 'Хвост в фокусе — портреты питомцев в поисках дома 🐾';
-        const shareUrl = encodeURIComponent(CONFIG.siteUrl);
-
-        function shareTelegram(e) {
-            e.preventDefault();
-            window.open(`https://t.me/share/url?url=${shareUrl}&text=${encodeURIComponent(shareText)}`, '_blank', 'width=600,height=400');
-        }
-
-        function shareVK(e) {
-            e.preventDefault();
-            window.open(`https://vk.com/share.php?url=${shareUrl}&title=${encodeURIComponent(shareText)}`, '_blank', 'width=650,height=450');
-        }
-
-        function shareWhatsApp(e) {
-            e.preventDefault();
-            window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + CONFIG.siteUrl)}`, '_blank');
-        }
-
-        function copyLink() {
-            navigator.clipboard.writeText(CONFIG.siteUrl).then(() => {
-                showToast('✅ Ссылка скопирована!');
-            }).catch(() => showToast('❌ Не удалось скопировать'));
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAdmins();
-            fetchPosts();
-        });
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href !== '#') {
-                    e.preventDefault();
-                    document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
+        // Запуск при загрузке страницы
+        document.addEventListener('DOMContentLoaded', loadPosts);
     </script>
 </body>
 </html>
