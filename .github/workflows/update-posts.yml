@@ -1,4 +1,3 @@
-# .github/workflows/update-posts.yml
 name: Update Telegram Posts
 
 on:
@@ -11,28 +10,27 @@ on:
 jobs:
   fetch-posts:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Разрешаем записывать изменения в репозиторий
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Обновленная версия без предупреждений
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # Обновленная версия
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install beautifulsoup4 requests
+        run: pip install requests beautifulsoup4
 
       - name: Fetch posts and update JSON
         env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHANNEL: ${{ secrets.CHANNEL_NAME }}
-        run: |
-          python fetch_posts.py
+          CHANNEL: ${{ secrets.CHANNEL }}
+        run: python fetch_posts.py
 
-      - name: Commit and push if changed
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add posts.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update telegram posts" && git push)
+      - name: Commit and push changes safely
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto-update telegram posts"
+          file_pattern: "posts.json"
