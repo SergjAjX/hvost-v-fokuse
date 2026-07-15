@@ -23,13 +23,6 @@ def fetch_posts():
     posts_data = []
     messages = soup.find_all('div', class_='tgme_widget_message')
 
-    # 🐞 ВРЕМЕННЫЙ ДАМП для отладки — печатаем в лог, т.к. на GitHub Actions
-    # файл на диске после запуска не сохраняется
-    if messages:
-        print("=== DEBUG HTML START ===")
-        print(messages[0].prettify())
-        print("=== DEBUG HTML END ===")
-
     for msg in messages:
         if len(posts_data) >= 5:
             break
@@ -47,12 +40,21 @@ def fetch_posts():
         # которая в разметке t.me/s/ лежит рядом, но вне bubble
         content_wrap = msg.find('div', class_='tgme_widget_message_bubble') or msg
 
-        # Сначала пробуем найти фоновое изображение (стандартный способ)
+        # Сначала пробуем найти одиночное фото (div.tgme_widget_message_photo_wrap)
         photo_wrap = content_wrap.find('div', class_='tgme_widget_message_photo_wrap')
         if photo_wrap and photo_wrap.get('style'):
             match = re.search(r'url\(["\']?(.*?)["\']?\)', photo_wrap['style'])
             if match:
                 image = match.group(1)
+
+        # Если не нашли — это может быть альбом (медиагруппа).
+        # Там фото лежат как <a class="tgme_widget_message_photo_wrap grouped_media_wrap ...">
+        if not image:
+            grouped_photo = content_wrap.find('a', class_='tgme_widget_message_photo_wrap')
+            if grouped_photo and grouped_photo.get('style'):
+                match = re.search(r'url\(["\']?(.*?)["\']?\)', grouped_photo['style'])
+                if match:
+                    image = match.group(1)
 
         # Фоллбэк: ищем img с файлом Telegram, исключая аватарку по родителям
         if not image:
