@@ -23,6 +23,12 @@ def fetch_posts():
     posts_data = []
     messages = soup.find_all('div', class_='tgme_widget_message')
 
+    # 🐞 ВРЕМЕННЫЙ ДАМП для отладки — посмотреть реальную разметку первого поста
+    if messages:
+        with open('debug_first_post.html', 'w', encoding='utf-8') as f:
+            f.write(messages[0].prettify())
+        print("📝 Сохранён debug_first_post.html — открой и посмотри, есть ли там фото")
+
     for msg in messages:
         if len(posts_data) >= 5:
             break
