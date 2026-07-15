@@ -21,9 +21,8 @@ def fetch_posts():
     soup = BeautifulSoup(response.text, 'html.parser')
     posts_data = []
     messages = soup.find_all('div', class_='tgme_widget_message')
-    print(f"📝 Найдено сообщений в HTML: {len(messages)}")
 
-    for i, msg in enumerate(messages):
+    for msg in messages:
         if len(posts_data) >= 5:
             break
 
@@ -33,12 +32,25 @@ def fetch_posts():
         if text_tag:
             text = text_tag.get_text(separator='\n', strip=True)
 
-        # 2. Изображение (Стандартный поиск)
+        # 2. Изображение (ПРОСТОЙ И НАДЕЖНЫЙ ПОИСК)
         image = None
+        
+        # Сначала пробуем найти фоновое изображение (стандартный способ)
         photo_wrap = msg.find('div', class_='tgme_widget_message_photo_wrap')
         if photo_wrap and photo_wrap.get('style'):
             match = re.search(r'url\(["\']?(.*?)["\']?\)', photo_wrap['style'])
-            if match: image = match.group(1)
+            if match: 
+                image = match.group(1)
+
+        # Если не нашли, ищем ЛЮБОЙ тег img с ссылкой на файл Telegram, КРОМЕ аватарки
+        if not image:
+            for img in msg.find_all('img'):
+                src = img.get('src', '')
+                img_classes = img.get('class', [])
+                # Главное условие: это файл Telegram И это не аватарка канала
+                if 'telesco.pe/file/' in src and 'tgme_widget_message_user_photo' not in img_classes:
+                    image = src
+                    break # Нашли картинку поста, прекращаем поиск
 
         # 3. Дата и ссылка
         date_text = 'Неизвестно'
@@ -51,27 +63,15 @@ def fetch_posts():
         if link_tag and link_tag.get('href'):
             link = link_tag['href']
 
-        # ЛОГИКА СОХРАНЕНИЯ И ДИАГНОСТИКИ
+        # Сохраняем, если есть текст ИЛИ картинка
         if text or image:
-            posts_data.append({'date': date_text, 'text': text, 'image': image, 'link': link})
-            print(f"✅ Пост #{len(posts_data)}: Текст={len(text)} зн., Фото={'Да' if image else 'Нет'}")
-        else:
-            # 🔍 ПОЛНЫЙ РЕЖИМ ДЕТЕКТИВА: Печатаем ВСЕ медиа в пропущенном блоке
-            print(f"⚠️ Блок {i+1} пропущен. Классы: {msg.get('class', [])}")
-            
-            # Ищем все теги img
-            for img in msg.find_all('img'):
-                src = img.get('src', '')
-                classes = img.get('class', [])
-                print(f"   🖼️ Найдена картинка (img):")
-                print(f"      src: {src[:80]}...")
-                print(f"      class: {classes}")
-            
-            # Ищем все фоновые изображения
-            for div in msg.find_all('div'):
-                style = div.get('style', '')
-                if 'background-image' in style and 'telesco.pe' in style:
-                    print(f"   🖼️ Найдено фоновое изображение (div): {style[:100]}...")
+            posts_data.append({
+                'date': date_text,
+                'text': text,
+                'image': image,
+                'link': link
+            })
+            print(f"✅ Сохранен: Текст={len(text)} зн., Фото={'Да' if image else 'Нет'}")
 
     print(f"🏁 ИТОГО: Собрано {len(posts_data)} постов.")
     with open('posts.json', 'w', encoding='utf-8') as f:
