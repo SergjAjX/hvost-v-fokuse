@@ -32,26 +32,27 @@ def fetch_posts():
         if text_tag:
             text = text_tag.get_text(separator='\n', strip=True)
 
-        # 2. Изображение (ИЗОЛИРОВАННЫЙ ПОИСК, ИСКЛЮЧАЮЩИЙ АВАТАРКУ)
+        # 2. Изображение (НАДЕЖНЫЙ ПОИСК БЕЗ АВАТАРОК)
         image = None
         
-        # А. Фоновое изображение (основной способ Telegram для фото в посте)
-        photo_wrap = msg.find('div', class_='tgme_widget_message_photo_wrap')
+        # Способ 1: Стандартные фото и превью к ссылкам/видео
+        photo_wrap = msg.find('div', class_=['tgme_widget_message_photo_wrap', 'tgme_widget_message_link_preview_image'])
         if photo_wrap and photo_wrap.get('style'):
             match = re.search(r'url\(["\']?(.*?)["\']?\)', photo_wrap['style'])
-            if match:
+            if match: 
                 image = match.group(1)
 
-        # Б. Если фонового нет, ищем img СТРОГО внутри тела сообщения (игнорируя шапку с аватаркой)
+        # Способ 2: Поиск картинок внутри самого контента поста (исключая блок автора)
         if not image:
-            body = msg.find('div', class_='tgme_widget_message_body')
-            if body:
-                for img in body.find_all('img'):
+            # Ищем блок с контентом поста, где аватарок точно нет
+            content_block = msg.find('div', class_='tgme_widget_message_bubble')
+            if content_block:
+                for img in content_block.find_all('img'):
                     src = img.get('src', '')
-                    # Берем любую картинку из тела поста, которая является файлом Telegram
-                    if 'telesco.pe/file/' in src:
+                    # Игнорируем смайлики (emoji) и проверяем ссылку на файл
+                    if 'telesco.pe/file/' in src and 'emoji' not in img.get('class', []):
                         image = src
-                        break # Останавливаемся на первой найденной картинке поста
+                        break
 
         # 3. Дата и ссылка
         date_text = 'Неизвестно'
@@ -72,7 +73,7 @@ def fetch_posts():
                 'image': image,
                 'link': link
             })
-            print(f"✅ Сохранен: Текст={len(text)} зн., Фото={'Да' if image else 'Нет'}")
+            print(f"✅ Сохранен: Дата={date_text}, Текст={len(text)} зн., Фото={'Да' if image else 'Нет'}")
 
     print(f"🏁 ИТОГО: Собрано {len(posts_data)} постов.")
     with open('posts.json', 'w', encoding='utf-8') as f:
