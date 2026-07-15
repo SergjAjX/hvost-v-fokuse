@@ -79,5 +79,4 @@
 - Telegram: [@nkt_gert](https://t.me/nkt_gert)
 
 ---
-*Сделано с ❤️ для сообщества "Хвост в Фокусе".*
-<p>Сделано с ❤️ для сообщества <a href="https://sergjajx.github.io/hvost-v-fokuse/" target="_blank">«Хвост в Фокусе»</a>.</p>
+*<p>Сделано с ❤️ для сообщества <a href="https://sergjajx.github.io/hvost-v-fokuse/" target="_blank">«Хвост в Фокусе»</a>.</p>.*
