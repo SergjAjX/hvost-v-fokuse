@@ -7,10 +7,11 @@ import re
 CHANNEL_NAME = os.getenv('CHANNEL', 'HVOST_V_FOKUSE').replace('@', '').strip()
 URL = f'https://t.me/s/{CHANNEL_NAME}'
 
+
 def fetch_posts():
     print(f"🔍 Запрос к: {URL}")
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
-    
+
     try:
         response = requests.get(URL, headers=headers, timeout=20)
         response.raise_for_status()
@@ -32,34 +33,44 @@ def fetch_posts():
         if text_tag:
             text = text_tag.get_text(separator='\n', strip=True)
 
-        # 2. Изображение (НАДЕЖНЫЙ ПОИСК БЕЗ АВАТАРОК)
+        # 2. Изображение
         image = None
-        
-        # Способ 1: Стандартные фото и превью к ссылкам/видео
-        photo_wrap = msg.find('div', class_=['tgme_widget_message_photo_wrap', 'tgme_widget_message_link_preview_image'])
+
+        # Ищем только внутри "тела" поста (bubble), чтобы не попасть на аватарку,
+        # которая в разметке t.me/s/ лежит рядом, но вне bubble
+        content_wrap = msg.find('div', class_='tgme_widget_message_bubble') or msg
+
+        # Сначала пробуем найти фоновое изображение (стандартный способ)
+        photo_wrap = content_wrap.find('div', class_='tgme_widget_message_photo_wrap')
         if photo_wrap and photo_wrap.get('style'):
             match = re.search(r'url\(["\']?(.*?)["\']?\)', photo_wrap['style'])
-            if match: 
+            if match:
                 image = match.group(1)
 
-        # Способ 2: Поиск картинок внутри самого контента поста (исключая блок автора)
+        # Фоллбэк: ищем img с файлом Telegram, исключая аватарку по родителям
         if not image:
-            # Ищем блок с контентом поста, где аватарок точно нет
-            content_block = msg.find('div', class_='tgme_widget_message_bubble')
-            if content_block:
-                for img in content_block.find_all('img'):
-                    src = img.get('src', '')
-                    # Игнорируем смайлики (emoji) и проверяем ссылку на файл
-                    if 'telesco.pe/file/' in src and 'emoji' not in img.get('class', []):
-                        image = src
-                        break
+            for img in content_wrap.find_all('img'):
+                src = img.get('src', '')
+                if 'telesco.pe/file/' not in src:
+                    continue
+
+                # Исключаем аватарки: у них родитель - блок автора/аватара
+                if img.find_parent('a', class_='tgme_widget_message_user'):
+                    continue
+                if img.find_parent(class_='tgme_widget_message_user_photo'):
+                    continue
+                if img.find_parent(class_='tgme_widget_message_author_photo'):
+                    continue
+
+                image = src
+                break
 
         # 3. Дата и ссылка
         date_text = 'Неизвестно'
         date_tag = msg.find('time')
         if date_tag:
             date_text = date_tag.text.strip() or date_tag.get('datetime', 'Неизвестно')[:10]
-        
+
         link = f'https://t.me/{CHANNEL_NAME}'
         link_tag = msg.find('a', class_='tgme_widget_message_date')
         if link_tag and link_tag.get('href'):
@@ -73,11 +84,12 @@ def fetch_posts():
                 'image': image,
                 'link': link
             })
-            print(f"✅ Сохранен: Дата={date_text}, Текст={len(text)} зн., Фото={'Да' if image else 'Нет'}")
+            print(f"✅ Сохранен: Текст={len(text)} зн., Фото={'Да' if image else 'Нет'}")
 
     print(f"🏁 ИТОГО: Собрано {len(posts_data)} постов.")
     with open('posts.json', 'w', encoding='utf-8') as f:
         json.dump(posts_data, f, ensure_ascii=False, indent=2)
+
 
 if __name__ == '__main__':
     fetch_posts()
