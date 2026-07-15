@@ -23,11 +23,12 @@ def fetch_posts():
     posts_data = []
     messages = soup.find_all('div', class_='tgme_widget_message')
 
-    # 🐞 ВРЕМЕННЫЙ ДАМП для отладки — посмотреть реальную разметку первого поста
+    # 🐞 ВРЕМЕННЫЙ ДАМП для отладки — печатаем в лог, т.к. на GitHub Actions
+    # файл на диске после запуска не сохраняется
     if messages:
-        with open('debug_first_post.html', 'w', encoding='utf-8') as f:
-            f.write(messages[0].prettify())
-        print("📝 Сохранён debug_first_post.html — открой и посмотри, есть ли там фото")
+        print("=== DEBUG HTML START ===")
+        print(messages[0].prettify())
+        print("=== DEBUG HTML END ===")
 
     for msg in messages:
         if len(posts_data) >= 5:
