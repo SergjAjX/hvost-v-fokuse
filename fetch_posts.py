@@ -32,25 +32,26 @@ def fetch_posts():
         if text_tag:
             text = text_tag.get_text(separator='\n', strip=True)
 
-        # 2. Изображение (ПРОСТОЙ И НАДЕЖНЫЙ ПОИСК)
+        # 2. Изображение (ИЗОЛИРОВАННЫЙ ПОИСК, ИСКЛЮЧАЮЩИЙ АВАТАРКУ)
         image = None
         
-        # Сначала пробуем найти фоновое изображение (стандартный способ)
+        # А. Фоновое изображение (основной способ Telegram для фото в посте)
         photo_wrap = msg.find('div', class_='tgme_widget_message_photo_wrap')
         if photo_wrap and photo_wrap.get('style'):
             match = re.search(r'url\(["\']?(.*?)["\']?\)', photo_wrap['style'])
-            if match: 
+            if match:
                 image = match.group(1)
 
-        # Если не нашли, ищем ЛЮБОЙ тег img с ссылкой на файл Telegram, КРОМЕ аватарки
+        # Б. Если фонового нет, ищем img СТРОГО внутри тела сообщения (игнорируя шапку с аватаркой)
         if not image:
-            for img in msg.find_all('img'):
-                src = img.get('src', '')
-                img_classes = img.get('class', [])
-                # Главное условие: это файл Telegram И это не аватарка канала
-                if 'telesco.pe/file/' in src and 'tgme_widget_message_user_photo' not in img_classes:
-                    image = src
-                    break # Нашли картинку поста, прекращаем поиск
+            body = msg.find('div', class_='tgme_widget_message_body')
+            if body:
+                for img in body.find_all('img'):
+                    src = img.get('src', '')
+                    # Берем любую картинку из тела поста, которая является файлом Telegram
+                    if 'telesco.pe/file/' in src:
+                        image = src
+                        break # Останавливаемся на первой найденной картинке поста
 
         # 3. Дата и ссылка
         date_text = 'Неизвестно'
